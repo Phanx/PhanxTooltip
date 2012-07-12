@@ -108,9 +108,11 @@ do
 		backdrop.insets.right = 4
 		backdrop.insets.top = 4
 		backdrop.insets.bottom = 4
-		GameTooltip:SetBackdrop(backdrop)
-		GameTooltip:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
-		GameTooltip:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
+	end
+	for _, tooltip in pairs({ GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3 }) do
+		tooltip:SetBackdrop(backdrop)
+		tooltip:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
+		tooltip:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
 	end
 end
 
@@ -463,12 +465,12 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 end)
 
 ------------------------------------------------------------------------
---	Items (GameTooltip and ShoppingTooltipN)
+--	Items (GameTooltip and ShoppingTooltip[1-3])
 
 local function OnTooltipSetItem(self, itemLink)
 	local _, item = itemLink or self:GetItem()
 	if not item then return end
-	local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, icon, sellPrice = GetItemInfo(item)
+	local name, _, quality, _, _, _, _, stackCount, _, icon, sellPrice = GetItemInfo(item)
 
 	local r, g, b, hex = GetItemQualityColor(quality)
 	self:SetBackdropBorderColor(r, g, b)
@@ -477,83 +479,3 @@ end
 for _, tooltip in ipairs({ GameTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3 }) do
 	tooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
 end
-
-------------------------------------------------------------------------
---	Items and achievements (ItemRefTooltip)
-
-do
-	local iconframe = CreateFrame("Frame", "ItemRefTooltipIcon", ItemRefTooltip)
-	iconframe:SetPoint("TOPRIGHT", ItemRefTooltip, "TOPLEFT", -8, 0)
-	iconframe:SetWidth(36)
-	iconframe:SetHeight(36)
-
-	if PhanxBorder then PhanxBorder.AddBorder(iconframe) end
-
-	local icon = iconframe:CreateTexture(nil, "BACKGROUND")
-	icon:SetAllPoints(true)
-	icon:SetTexCoord(0.06, 0.94, 0.06, 0.94)
-
-	icon.frame = iconframe
-
-	local check = iconframe:CreateTexture(nil, "ARTWORK")
-	check:SetPoint("BOTTOMRIGHT")
-
-	local count = iconframe:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
-	count:SetPoint("BOTTOMRIGHT")
-
-	ItemRefTooltip.icon = icon
-	ItemRefTooltip.check = check
-	ItemRefTooltip.count = count
-end
-
-ItemRefTooltip:HookScript("OnTooltipSetItem", function(self)
-	local _, item = self:GetItem()
-	if not item then return end
-	local name, link, rarity, level, minLevel, type, subType, stackCount, equipLoc, icon, sellPrice = GetItemInfo(item)
-
-	if rarity then
-		local r, g, b, hex = GetItemQualityColor(rarity)
-		self:SetBackdropBorderColor(r, g, b)
-		self.icon.frame:SetBackdropBorderColor(r, g, b)
-	end
-
-	self.icon:SetTexture(icon)
-
-	if stackCount and stackCount > 1 then
-		self.count:SetText(stackCount)
-	end
-end)
-
-ItemRefTooltip:HookScript("OnTooltipSetSpell", function(self)
-	local _, _, spell = self:GetSpell()
-	if not spell then return end
-	local _, _, icon = GetSpellInfo(spell)
-
-	self.icon:SetTexture(icon)
-end)
-
-hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(self, link)
-	if type(link) ~= "string" then return end
-	local linkType, id = link:match("^([^:]+):(%d+)")
-	--print("Link type:", linkType, id)
-	if linkType == "achievement" then
-		local _, name, points, completed, month, day, year, description, flags, icon, reward = GetAchievementInfo(id)
-		--print("Linked achievement:", id, name)
-
-		self.icon:SetTexture(icon)
-
-		self.icon.frame:SetBackdropBorderColor(1, 0.8, 0, 1)
-		self:SetBackdropBorderColor(1, 0.8, 0, 1)
-	--[[
-		if points > 0 then
-			self.count:SetText(points)
-		end
-	]]
-	end
-end)
-
-ItemRefTooltip:HookScript("OnTooltipCleared", function(self)
-	self.icon.frame:SetBackdropBorderColor(1, 1, 1)
-	self.icon:SetTexture(nil)
-	self.count:SetText(nil)
-end)

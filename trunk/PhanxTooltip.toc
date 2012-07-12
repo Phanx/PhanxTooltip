@@ -10,3 +10,4 @@
 ## X-CompatibleLocales: deDE, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 
 PhanxTooltip.lua
+ItemRefTooltip.lua
