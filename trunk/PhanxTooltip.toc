@@ -1,5 +1,5 @@
 ## Interface: 50001
-## Version: 5.0.1.wowi:revision
+## Version: 5.0.4.wowi:revision
 
 ## Title: PhanxTooltip
 ## Notes: Simple tooltip modifications.
