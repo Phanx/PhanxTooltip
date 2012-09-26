@@ -45,15 +45,15 @@ do
 		LEVEL = "[Ll]ivello"
 		BEAST = "Tipo Bestiale"
 		HUMANOID = "Tipo Umanoide"
-		NON_COMBAT_PET = ""
-		NOT_SPECIFICED = ""
+		NON_COMBAT_PET = "Animale Non combattente"
+		NOT_SPECIFICED = "Non Specificato"
 	elseif GAME_LOCALE == "ptBR" then
 		LEVEL = "[Nn]ível"
 		BOSS = " %(Chefe%)"
 		BEAST = "Fera"
 		HUMANOID = "Humanoide"
-		NON_COMBAT_PET = ""
-		NOT_SPECIFIED = ""
+		NON_COMBAT_PET = "" -- NEEDS TRANSLATION
+		NOT_SPECIFIED = "Não especificado"
 	elseif GAME_LOCALE == "ruRU" then
 		LEVEL = "[Уу]рове?н[ья]"
 		BEAST = "Животное"
@@ -457,7 +457,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	--------------------------------------------------------------------
 	--	Done
 
-	if UnitHealth(unit) > 0 then
+	if UnitHealth(unit) > 0 and not UnitIsDeadOrGhost(unit) then
 		GameTooltip.addHeight = 6 + GameTooltip.statusBar:GetHeight()
 	end
 
