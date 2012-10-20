@@ -216,6 +216,11 @@ hooksecurefunc(GameTooltip, "Show", function(self)
 	end
 end)
 
+GameTooltip:HookScript("OnHide", function(self)
+	self.raidTargetIcon:SetTexture(nil)
+	self.raidTargetIcon:Hide()
+end)
+
 GameTooltip:HookScript("OnUpdate", function(self, elapsed)
 	if not self.currentUnit then
 		self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
