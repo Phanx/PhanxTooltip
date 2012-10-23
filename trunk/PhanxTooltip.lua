@@ -120,10 +120,6 @@ end
 --	Unit colors
 
 local classrgb, classhex = { }, { }
-for k, v in pairs(CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS) do
-	classrgb[k] = { v.r, v.g, v.b }
-	classhex[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
-end
 
 local levelhex = setmetatable({ }, { __index = function(levelhex, level)
 	if type(level) ~= "number" then level = UnitLevel("player") end
@@ -158,6 +154,30 @@ local unithex = { }
 for k, v in pairs(unitrgb) do
 	unithex[k] = format("|cff%02x%02x%02x", v[1] * 255, v[2] * 255, v[3] * 255)
 end
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
+f:RegisterEvent("PLAYER_LEVEL_UP")
+f:SetScript("OnEvent", function(f, event)
+	if event == "PLAYER_LOGIN" then
+		for k, v in pairs(CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS) do
+			classrgb[k] = { v.r, v.g, v.b }
+			classhex[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
+		end
+		if CUSTOM_CLASS_COLORS then
+			CUSTOM_CLASS_COLORS:RegisterCallback(function()
+			for k, v in pairs(CUSTOM_CLASS_COLORS ) do
+				classrgb[k].r = v.r
+				classrgb[k].g = v.g
+				classrgb[k].b = v.b
+				classhex[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
+			end
+			end)
+		end
+	else
+		wipe(levelhex)
+	end
+end)
 
 ------------------------------------------------------------------------
 --	Faster access to fontstrings
