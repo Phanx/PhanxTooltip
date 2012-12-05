@@ -258,7 +258,7 @@ end)
 
 GameTooltip:HookScript("OnTooltipCleared", function(self)
 	self.addHeight, self.newHeight = nil, nil
-	self.currentUnit = nil
+	self.currentItem, self.currentUnit = nil, nil
 end)
 
 ------------------------------------------------------------------------
@@ -502,7 +502,7 @@ local function OnTooltipSetItem(self)
 		self:SetBackdropBorderColor(1, 0.82, 0.2)
 	elseif subType == "Cooking" then
 		self:SetBackdropBorderColor(0.4, 0.73, 1)
-	else
+	elseif quality then
 		local r, g, b = GetItemQualityColor(quality)
 		self:SetBackdropBorderColor(r, g, b)
 	end
