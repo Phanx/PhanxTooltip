@@ -93,13 +93,13 @@ end)
 ------------------------------------------------------------------------
 --	Modify default colors
 
-TOOLTIP_DEFAULT_COLOR.r = 0.3
-TOOLTIP_DEFAULT_COLOR.g = 0.3
-TOOLTIP_DEFAULT_COLOR.b = 0.3
+TOOLTIP_DEFAULT_COLOR.r = 0.8
+TOOLTIP_DEFAULT_COLOR.g = 0.8
+TOOLTIP_DEFAULT_COLOR.b = 0.8
 
-TOOLTIP_DEFAULT_BACKGROUND_COLOR.r = 16/255
-TOOLTIP_DEFAULT_BACKGROUND_COLOR.g = 16/255
-TOOLTIP_DEFAULT_BACKGROUND_COLOR.b = 16/255
+TOOLTIP_DEFAULT_BACKGROUND_COLOR.r = 0
+TOOLTIP_DEFAULT_BACKGROUND_COLOR.g = 0
+TOOLTIP_DEFAULT_BACKGROUND_COLOR.b = 0
 
 do
 	local backdrop = GameTooltip:GetBackdrop()
@@ -228,7 +228,7 @@ end
 
 hooksecurefunc(GameTooltip, "Show", function(self)
 	self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
-	if not self:GetUnit() then
+	if not self:GetItem() and not self:GetUnit() then
 		self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
 	end
 	if self.addHeight then
@@ -242,7 +242,7 @@ GameTooltip:HookScript("OnHide", function(self)
 end)
 
 GameTooltip:HookScript("OnUpdate", function(self, elapsed)
-	if not self.currentUnit then
+	if not self.currentItem and not self.currentUnit then
 		self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
 		self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
 	end
@@ -490,15 +490,22 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 end)
 
 ------------------------------------------------------------------------
---	Items (GameTooltip and ShoppingTooltip[1-3])
+--	Items (GameTooltip and ShoppingTooltip1-3)
 
-local function OnTooltipSetItem(self, itemLink)
-	local _, item = itemLink or self:GetItem()
-	if not item then return end
-	local name, _, quality, _, _, _, _, stackCount, _, icon, sellPrice = GetItemInfo(item)
+local function OnTooltipSetItem(self)
+	local name, link = self:GetItem()
+	if not link then return end
+	self.currentItem = link
 
-	local r, g, b, hex = GetItemQualityColor(quality)
-	self:SetBackdropBorderColor(r, g, b)
+	local name, _, quality, _, _, type, subType, stackCount, _, icon, sellPrice = GetItemInfo(link)
+	if type == "Quest" then
+		self:SetBackdropBorderColor(1, 0.82, 0.2)
+	elseif subType == "Cooking" then
+		self:SetBackdropBorderColor(0.4, 0.73, 1)
+	else
+		local r, g, b = GetItemQualityColor(quality)
+		self:SetBackdropBorderColor(r, g, b)
+	end
 end
 
 for _, tooltip in ipairs({ GameTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3 }) do
