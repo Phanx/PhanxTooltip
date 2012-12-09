@@ -34,21 +34,38 @@ do
 end
 
 ItemRefTooltip:HookScript("OnTooltipSetItem", function(self)
-	local _, item = self:GetItem()
-	if not item then return end
+	local name, link = self:GetItem()
+	if not link then return end
+	self.currentItem = link
 
-	local name, _, rarity, _, _, _, _, stackCount, _, icon, sellPrice = GetItemInfo(item)
+	local name, _, quality, _, _, type, subType, stackCount, _, icon, sellPrice = GetItemInfo(link)
 
 	self.icon:SetTexture(icon)
 
-	if rarity then
-		local r, g, b, hex = GetItemQualityColor(rarity)
-		self:SetBackdropBorderColor(r, g, b)
-		self.icon.frame:SetBackdropBorderColor(r, g, b)
-	end
-
 	if stackCount and stackCount > 1 then
 		self.count:SetText(stackCount)
+	end
+
+	local r, g, b
+	if type == "Quest" then
+		r, g, b = 1, 0.82, 0.2
+	elseif subType == "Cooking" then
+		r, g, b = 0.4, 0.73, 1
+	elseif subType == "Companion Pets" then
+		local _, id = C_PetJournal.FindPetIDByName(name)
+		if id then
+			local _, _, _, _, petQuality = C_PetJournal.GetPetStats(id)
+			if petQuality then
+				quality = petQuality - 1
+			end
+		end
+	end
+	if quality and not r then
+		r, g, b = GetItemQualityColor(quality)
+	end
+	if r then
+		self:SetBackdropBorderColor(r, g, b)
+		self.icon.frame:SetBackdropBorderColor(r, g, b)
 	end
 end)
 

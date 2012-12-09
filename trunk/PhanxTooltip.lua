@@ -499,11 +499,22 @@ local function OnTooltipSetItem(self)
 
 	local name, _, quality, _, _, type, subType, stackCount, _, icon, sellPrice = GetItemInfo(link)
 	if type == "Quest" then
-		self:SetBackdropBorderColor(1, 0.82, 0.2)
+		r, g, b = 1, 0.82, 0.2
 	elseif subType == "Cooking" then
-		self:SetBackdropBorderColor(0.4, 0.73, 1)
-	elseif quality then
-		local r, g, b = GetItemQualityColor(quality)
+		r, g, b = 0.4, 0.73, 1
+	elseif subType == "Companion Pets" then
+		local _, id = C_PetJournal.FindPetIDByName(name)
+		if id then
+			local _, _, _, _, petQuality = C_PetJournal.GetPetStats(id)
+			if petQuality then
+				quality = petQuality - 1
+			end
+		end
+	end
+	if quality and not r then
+		r, g, b = GetItemQualityColor(quality)
+	end
+	if quality then
 		self:SetBackdropBorderColor(r, g, b)
 	end
 end
