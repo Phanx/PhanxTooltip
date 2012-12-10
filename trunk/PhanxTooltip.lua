@@ -498,6 +498,7 @@ local function OnTooltipSetItem(self)
 	self.currentItem = link
 
 	local name, _, quality, _, _, type, subType, stackCount, _, icon, sellPrice = GetItemInfo(link)
+	local r, g, b
 	if type == "Quest" then
 		r, g, b = 1, 0.82, 0.2
 	elseif subType == "Cooking" then
