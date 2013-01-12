@@ -1,7 +1,7 @@
 --[[--------------------------------------------------------------------
 	PhanxTooltip
 	Simple tooltip modifications.
-	Copyright (c) 2011-2012 Phanx <addons@phanx.net>. All rights reserved.
+	Copyright (c) 2011-2013 Phanx <addons@phanx.net>. All rights reserved.
 	See the accompanying LICENSE file for more information.
 ----------------------------------------------------------------------]]
 --	Items and achievements (ItemRefTooltip)
@@ -100,9 +100,11 @@ hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(self, link)
 		if characterCompleted then
 			self:AddLine(" ")
 			self:AddLine(format("Completed on %d-%d-%d", year, month, day))
+			self:Show()
 		elseif accountCompleted then
 			self:AddLine(" ")
 			self:AddLine(format("Completed by %s on %d-%d-%d", whoCompleted, year, month, day))
+			self:Show()
 		end
 --[[
 		if points > 0 then

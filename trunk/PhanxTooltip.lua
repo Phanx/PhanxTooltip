@@ -1,7 +1,7 @@
 --[[--------------------------------------------------------------------
 	PhanxTooltip
 	Simple tooltip modifications.
-	Copyright (c) 2011-2012 Phanx <addons@phanx.net>. All rights reserved.
+	Copyright (c) 2011-2013 Phanx <addons@phanx.net>. All rights reserved.
 	See the accompanying LICENSE file for more information.
 ----------------------------------------------------------------------]]
 

@@ -5,7 +5,7 @@
 ## Notes: Simple tooltip modifications.
 ## Author: Phanx
 ## X-Email: addons@phanx.net
-## X-Copyright: Copyright (c) 2011-2012 Phanx. All rights reserved.
+## X-Copyright: Copyright (c) 2011-2013 Phanx. All rights reserved.
 ## X-License: See the accompanying LICENSE file for details.
 ## X-CompatibleLocales: deDE, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 
