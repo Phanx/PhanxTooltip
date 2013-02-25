@@ -166,7 +166,7 @@ f:SetScript("OnEvent", function(f, event)
 		end
 		if CUSTOM_CLASS_COLORS then
 			CUSTOM_CLASS_COLORS:RegisterCallback(function()
-			for k, v in pairs(CUSTOM_CLASS_COLORS ) do
+			for k, v in pairs(CUSTOM_CLASS_COLORS) do
 				classrgb[k].r = v.r
 				classrgb[k].g = v.g
 				classrgb[k].b = v.b
@@ -319,7 +319,8 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	if UnitIsPlayer(unit) then
 
 		local name, realm = UnitName(unit)
-		if realm == "" or name == playerRealm then realm = nil end
+		if name == UNKNOWN then return end
+		if realm == "" or realm == playerRealm then realm = nil end
 
 		local afk = UnitIsAFK(unit) and "AFK" or UnitIsDND(unit) and "DND"
 
