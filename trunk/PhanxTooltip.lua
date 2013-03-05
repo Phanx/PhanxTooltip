@@ -374,8 +374,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		local dead = UnitIsDead(unit)
 		local tapped = UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)
 
-		local level, class, ctype = UnitLevel(unit), UnitClassification(unit), UnitCreatureType(unit)
-		local lhex = attackable and (level > 0 and levelhex[level] or levelhex[100]) or "|cffffffff"
+		local isBattlePet = UnitIsBattlePet(unit)
+		local level, class, ctype = isBattlePet and UnitBattlePetLevel(unit) or UnitLevel(unit), UnitClassification(unit), UnitCreatureType(unit)
+		local lhex = attackable and not isBattlePet and (level > 0 and levelhex[level] or levelhex[100]) or "|cffffffff"
 
 		local uhex, ur, ug, ub
 		if dead then
