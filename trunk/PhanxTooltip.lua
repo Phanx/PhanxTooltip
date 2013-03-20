@@ -8,6 +8,8 @@
 local BOSS = BOSS
 local CORPSE_TOOLTIP = "^" .. CORPSE_TOOLTIP:gsub("%%s", "(.+)") .. "$"
 local PVP_ENABLED = PVP_ENABLED
+local SAME_FACTION = UnitFactionGroup("player")
+local WILDBATTLEPET_TOOLTIP = "^" .. gsub(TOOLTIP_WILDBATTLEPET_LEVEL_CLASS, "%%s", ".+")
 
 local LEVEL = "Level" -- Must match tooltip lines
 local BEAST = "Beast"
@@ -375,7 +377,10 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		local tapped = UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)
 
 		local isBattlePet = UnitIsBattlePet(unit)
-		local level, class, ctype = isBattlePet and UnitBattlePetLevel(unit) or UnitLevel(unit), UnitClassification(unit), UnitCreatureType(unit)
+		local level = isBattlePet and UnitBattlePetLevel(unit) or UnitLevel(unit)
+		local class = UnitClassification(unit)
+		local ctype = UnitCreatureType(unit)
+		local btype = isBattlePet and format(" (%s)", _G["BATTLE_PET_NAME_"..UnitBattlePetType(unit)])
 		local lhex = attackable and not isBattlePet and (level > 0 and levelhex[level] or levelhex[100]) or "|cffffffff"
 
 		local uhex, ur, ug, ub
@@ -407,7 +412,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		end
 
 		-- Level, type
-		if ctype == NON_COMBAT_PET then
+		if not isBattlePet and ctype == NON_COMBAT_PET then
 			left[line]:SetText(nil)
 		else
 			if info:match(BOSS) then
@@ -415,23 +420,25 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			end
 			if ctype == NOT_SPECIFIED then
 				ctype = ""
+			elseif ctype == NON_COMBAT_PET then
+				ctype = TOOLTIP_BATTLE_PET
 			elseif UnitPlayerControlled(unit) then
 				ctype = UnitCreatureFamily(unit) or ctype
 			end
-			left[line]:SetFormattedText("%s%s|r%s %s%s|r", lhex, level > 0 and level or "??", classification[class] or "", uhex, ctype or "")
+			left[line]:SetFormattedText("%s%s|r%s %s%s|r%s", lhex, level > 0 and level or "??", classification[class] or "", uhex, ctype or "", btype or "")
 			line = line + 1
 		end
 
 	end
 
 	--------------------------------------------------------------------
-	--	Hide "PvP"
+	--	Hide PvP text, same faction name, Blizzard battle pet info
 
 	for i = line, GameTooltip:NumLines() do
 		local L = left[i]
-		if L and L:GetText() == PVP_ENABLED then
+		local T = strtrim(L:GetText() or "")
+		if T == PVP_ENABLED or T == SAME_FACTION or strfind(T, WILDBATTLEPET_TOOLTIP) then
 			L:SetText(nil)
-			break
 		end
 	end
 
@@ -467,7 +474,6 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 			GameTooltip:AddLine(format("@ %s%s|r", uhex, name), 1, 1, 1)
 		end
-		line = line + 1
 	end
 
 	--------------------------------------------------------------------
