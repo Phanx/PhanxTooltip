@@ -205,7 +205,7 @@ do
 	bar:SetPoint("BOTTOMLEFT", 10, 10)
 	bar:SetPoint("BOTTOMRIGHT", -10, 10)
 	bar:SetHeight(6)
-	bar:SetStatusBarTexture([[Interface\AddOns\PhanxMedia\statusbar\Diablo]]) -- Savant1
+	bar:SetStatusBarTexture([[Interface\AddOns\PhanxMedia\statusbar\BlizzStone2]])
 
 	GameTooltip.statusBar = bar
 end
