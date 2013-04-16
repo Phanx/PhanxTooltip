@@ -327,7 +327,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		local afk = UnitIsAFK(unit) and "AFK" or UnitIsDND(unit) and "DND"
 
 		local class, classEN = UnitClass(unit)
-		local chex, cr, cg, cb = classhex[classEN], unpack(classrgb[classEN])
+		local chex, cr, cg, cb = classhex[classEN], classrgb[classEN][1], classrgb[classEN][2], classrgb[classEN][3]
 
 		local level, race, faction = UnitLevel(unit), UnitRace(unit), UnitFactionGroup(unit)
 		local lhex = UnitCanAttack("player", unit) and levelhex[level] or "|cffffffff"
@@ -339,7 +339,12 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			pvp = UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit)
 		end
 
-		GameTooltip:SetBackdropBorderColor(cr, cg, cb)
+		if pvp then
+			local c = unitrgb[2]
+			GameTooltip:SetBackdropBorderColor(c[1], c[2], c[3])
+		else
+			GameTooltip:SetBackdropBorderColor(cr, cg, cb)
+		end
 
 		-- Name
 		if afk and realm then
@@ -385,14 +390,18 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		local uhex, ur, ug, ub
 		if dead then
-			uhex, ur, ug, ub = unithex.dead, unpack(unitrgb.dead)
+			local c = unitrgb.dead
+			uhex, ur, ug, ub = unithex.dead, c[1], c[2], c[3]
 		elseif tapped then
-			uhex, ur, ug, ub = unithex.tapped, unpack(unitrgb.tapped)
+			local c = unitrgb.tapped
+			uhex, ur, ug, ub = unithex.tapped, c[1], c[2], c[3]
 		elseif UnitIsEnemy(unit, "player") then
-			uhex, ur, ug, ub = unithex[1], unpack(unitrgb[1])
+			local c = unitrgb[2]
+			uhex, ur, ug, ub = unithex[1], c[1], c[2], c[3]
 		else
 			local v = UnitReaction(unit, "player") or 5
-			uhex, ur, ug, ub = unithex[v], unpack(unitrgb[v])
+			local c = unitrgb[v]
+			uhex, ur, ug, ub = unithex[v], c[1], c[2], c[3]
 		end
 		GameTooltip:SetBackdropBorderColor(ur, ug, ub)
 
@@ -437,10 +446,12 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	for i = line, GameTooltip:NumLines() do
 		local L = left[i]
 		local T = strtrim(L:GetText() or "")
-		if T == PVP_ENABLED or T == SAME_FACTION or strfind(T, WILDBATTLEPET_TOOLTIP) then
+		if T == PVP_ENABLED or T == FACTION_ALLIANCE or T == FACTION_HORDE or strfind(T, WILDBATTLEPET_TOOLTIP) then
 			L:SetText(nil)
 		end
 	end
+
+	GameTooltip:Show() -- Hopefully hide some nil'ed lines
 
 	--------------------------------------------------------------------
 	--	Add target info
