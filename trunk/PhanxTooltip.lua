@@ -6,7 +6,7 @@
 ----------------------------------------------------------------------]]
 
 local BOSS = BOSS
-local CORPSE_TOOLTIP = "^" .. CORPSE_TOOLTIP:gsub("%%s", "(.+)") .. "$"
+local CORPSE_TOOLTIP = "^" .. gsub(CORPSE_TOOLTIP, "%%s", "(.+)") .. "$"
 local PVP_ENABLED = PVP_ENABLED
 local SAME_FACTION = UnitFactionGroup("player")
 local WILDBATTLEPET_TOOLTIP = "^" .. gsub(TOOLTIP_WILDBATTLEPET_LEVEL_CLASS, "%%s", ".+")
@@ -16,6 +16,7 @@ local BEAST = "Beast"
 local HUMANOID = "Humanoid"
 local NON_COMBAT_PET = "Non-combat Pet"
 local NOT_SPECIFIED = "Not specified"
+local YOU = strupper(YOU)
 
 do
 	local GAME_LOCALE = GetLocale()
@@ -25,43 +26,50 @@ do
 		HUMANOID = "Humanoid"
 		NON_COMBAT_PET = "Haustier"
 		NOT_SPECIFIED = "Nicht spezifiziert"
+		YOU = "DIR"
 	elseif GAME_LOCALE == "esES" then
 		LEVEL = "Nivel"
 		BEAST = "Bestia"
 		HUMANOID = "Humanoide"
 		NON_COMBAT_PET = "Mascota no combatiente"
 		NOT_SPECIFIED = "No especificado"
+		YOU = "TI"
 	elseif GAME_LOCALE == "esMX" then
 		LEVEL = "Nivel"
 		BEAST = "Bestia"
 		HUMANOID = "Humanoide"
 		NON_COMBAT_PET = "Mascota mansa"
 		NOT_SPECIFIED = "Sin especificar"
+		YOU = "TI"
 	elseif GAME_LOCALE == "frFR" then
 		LEVEL = "[Nn]iveau"
 		BEAST = "Bête"
 		HUMANOID = "Humanoïde"
 		NON_COMBAT_PET = "Familier pacifique"
 		NOT_SPECIFIED = "Non spécifié"
+		YOU = "VOUS"
 	elseif GAME_LOCALE == "itIT" then
 		LEVEL = "[Ll]ivello"
 		BEAST = "Tipo Bestiale"
 		HUMANOID = "Tipo Umanoide"
 		NON_COMBAT_PET = "Animale Non combattente"
 		NOT_SPECIFICED = "Non Specificato"
+		YOU = "VOI"
 	elseif GAME_LOCALE == "ptBR" then
 		LEVEL = "[Nn]ível"
 		BOSS = " %(Chefe%)"
 		BEAST = "Fera"
 		HUMANOID = "Humanoide"
-		NON_COMBAT_PET = "" -- NEEDS TRANSLATION
+		NON_COMBAT_PET = "Mascote não-combatente"
 		NOT_SPECIFIED = "Não especificado"
+		YOU = "VOCÊ"
 	elseif GAME_LOCALE == "ruRU" then
 		LEVEL = "[Уу]рове?н[ья]"
 		BEAST = "Животное"
 		HUMANOID = "Гуманоид"
 		NON_COMBAT_PET = "Спутник"
 		NOT_SPECIFIED = "Не указано"
+		YOU = "ВАС"
 	elseif GAME_LOCALE == "koKR" then
 		LEVEL = "레벨"
 		BEAST = "야수"
@@ -82,6 +90,13 @@ do
 		NOT_SPECIFIED = "不明"
 	end
 end
+
+local REALM_LABELS = {
+	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL,
+	[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL,
+}
+
+COALESCED_REALM_TOOLTIP = "" -- fuck off
 
 ------------------------------------------------------------------------
 --	Modify default position
@@ -133,23 +148,23 @@ end })
 
 local classification = {
 	elite = " |cffffcc00Elite|r",
-	rare = " |cff999999Rare|r",
+	rare  = " |cff999999Rare|r",
 	rareelite = " |cff999999Rare|r |cffffcc00Elite|r",
 	worldboss = " |cffff6666Boss|r",
 }
 
 local unitrgb = {
-	[1] = { 1,   0.2, 0.2 }, -- Hated
-	[2] = { 1,   0.2, 0.2 }, -- Hostile
-	[3] = { 1,   0.6, 0.2 }, -- Unfriendly
-	[4] = { 1,   1,   0.2 }, -- Neutral
-	[5] = { 0.2, 1,   0.2 }, -- Friendly
-	[6] = { 0.2, 1,   0.2 }, -- Honored
-	[7] = { 0.2, 1,   0.2 }, -- Revered
-	[8] = { 0.2, 1,   0.2 }, -- Exalted
-	dead = { 0.6, 0.6, 0.6 },
+	    [1] = { 1,   0.2, 0.2 }, -- Hated
+	    [2] = { 1,   0.2, 0.2 }, -- Hostile
+	    [3] = { 1,   0.6, 0.2 }, -- Unfriendly
+	    [4] = { 1,   1,   0.2 }, -- Neutral
+	    [5] = { 0.2, 1,   0.2 }, -- Friendly
+	    [6] = { 0.2, 1,   0.2 }, -- Honored
+	    [7] = { 0.2, 1,   0.2 }, -- Revered
+	    [8] = { 0.2, 1,   0.2 }, -- Exalted
+	   dead = { 0.6, 0.6, 0.6 },
 	offline = { 0.4, 0.4, 0.4 },
-	tapped = { 0.6, 0.6, 0.6 },
+	 tapped = { 0.6, 0.6, 0.6 },
 }
 
 local unithex = { }
@@ -168,12 +183,12 @@ f:SetScript("OnEvent", function(f, event)
 		end
 		if CUSTOM_CLASS_COLORS then
 			CUSTOM_CLASS_COLORS:RegisterCallback(function()
-			for k, v in pairs(CUSTOM_CLASS_COLORS) do
-				classrgb[k].r = v.r
-				classrgb[k].g = v.g
-				classrgb[k].b = v.b
-				classhex[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
-			end
+				for k, v in pairs(CUSTOM_CLASS_COLORS) do
+					classrgb[k].r = v.r
+					classrgb[k].g = v.g
+					classrgb[k].b = v.b
+					classhex[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
+				end
 			end)
 		end
 	else
@@ -292,7 +307,8 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	if not playerLevel then playerLevel = UnitLevel("player") end
 
 	if left[1]:GetText():match(CORPSE_TOOLTIP) then
-		return left[1]:SetTextColor(unpack(unitrgb.dead))
+		local color = unitrgb.dead
+		return left[1]:SetTextColor(color[1], color[2], color[3])
 	end
 
 	--------------------------------------------------------------------
@@ -321,6 +337,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	if UnitIsPlayer(unit) then
 
 		local name, realm = UnitName(unit)
+		local realmLabel = REALM_LABELS[UnitRealmRelationship(unit)] or ""
 		if name == UNKNOWN then return end
 		if realm == "" or realm == playerRealm then realm = nil end
 
@@ -348,11 +365,11 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		-- Name
 		if afk and realm then
-			left[line]:SetFormattedText("%s%s of %s|r <%s>", chex, name, realm, afk)
+			left[line]:SetFormattedText("%s%s of %s%s|r <%s>", chex, name, realm, afk, realmLabel)
+		elseif realm then
+			left[line]:SetFormattedText("%s%s of %s%s|r", chex, name, realm, realmLabel)
 		elseif afk then
 			left[line]:SetFormattedText("%s%s|r <%s>", chex, name, afk)
-		elseif realm then
-			left[line]:SetFormattedText("%s%s of %s|r", chex, name, realm)
 		else
 			left[line]:SetFormattedText("%s%s|r", chex, name)
 		end
@@ -406,7 +423,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		GameTooltip:SetBackdropBorderColor(ur, ug, ub)
 
 		-- Name
-		left[line]:SetFormattedText("%s%s|r", uhex, name)
+		left[line]:SetFormattedText("%s%s|r", uhex, name or UNKNOWN)
 		line = line + 1
 
 		-- Info
@@ -445,8 +462,8 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 	for i = line, GameTooltip:NumLines() do
 		local L = left[i]
-		local T = strtrim(L:GetText() or "")
-		if T == PVP_ENABLED or T == FACTION_ALLIANCE or T == FACTION_HORDE or strfind(T, WILDBATTLEPET_TOOLTIP) then
+		local T = strtrim( L:GetText() or "" )
+		if T == "" or T == PVP_ENABLED or T == FACTION_ALLIANCE or T == FACTION_HORDE or strfind(T, WILDBATTLEPET_TOOLTIP) then
 			L:SetText(nil)
 		end
 	end
@@ -465,7 +482,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			local chex = classhex[classEN]
 
 			if UnitIsUnit(target, "player") then
-				GameTooltip:AddLine("@ >> YOU <<", 1, 1, 1)
+				GameTooltip:AddLine(format("@ >> %s <<", YOU), 1, 1, 1)
 			elseif realm then
 				GameTooltip:AddLine(format("@ %s%s of %s|r", chex, name, realm), 1, 1, 1)
 			else
