@@ -12,14 +12,18 @@ local SAME_FACTION = UnitFactionGroup("player")
 local WILDBATTLEPET_TOOLTIP = "^" .. gsub(TOOLTIP_WILDBATTLEPET_LEVEL_CLASS, "%%s", ".+")
 
 local LEVEL = "Level" -- Must match tooltip lines
+local QUEST = "Quest" -- Must match return from GetItemInfo
+local COOKING = "Cooking" -- Must match return from GetItemInfo
+local COMPANION_PETS = "Companion Pets" -- Must match return from GetItemInfo
 local BEAST = "Beast"
 local HUMANOID = "Humanoid"
 local NON_COMBAT_PET = "Non-combat Pet"
 local NOT_SPECIFIED = "Not specified"
-local YOU = strupper(YOU)
 local BOSS = "Boss"
 local ELITE = "Elite"
 local RARE = "Rare"
+local YOU = "YOU"
+local OF = "of"
 
 do
 	local GAME_LOCALE = GetLocale()
@@ -29,50 +33,55 @@ do
 		HUMANOID = "Humanoid"
 		NON_COMBAT_PET = "Haustier"
 		NOT_SPECIFIED = "Nicht spezifiziert"
-		YOU = "DIR"
 		BOSS = "Chef"
-		--ELITE = "Elite"
+		ELITE = "Elite"
 		RARE = "Rar"
+		YOU = "EUCH"
+		OF = "von"
 	elseif GAME_LOCALE == "esES" then
 		LEVEL = "Nivel"
 		BEAST = "Bestia"
 		HUMANOID = "Humanoide"
 		NON_COMBAT_PET = "Mascota no combatiente"
 		NOT_SPECIFIED = "No especificado"
-		YOU = "TI"
 		BOSS = "Jefe"
 		ELITE = "Élite"
 		RARE = "Raro"
+		YOU = "TI"
+		OF = "de"
 	elseif GAME_LOCALE == "esMX" then
 		LEVEL = "Nivel"
 		BEAST = "Bestia"
 		HUMANOID = "Humanoide"
 		NON_COMBAT_PET = "Mascota mansa"
 		NOT_SPECIFIED = "Sin especificar"
-		YOU = "TI"
 		BOSS = "Jefe"
 		ELITE = "Élite"
 		RARE = "Raro"
+		YOU = "TI"
+		OF = "de"
 	elseif GAME_LOCALE == "frFR" then
 		LEVEL = "[Nn]iveau"
 		BEAST = "Bête"
 		HUMANOID = "Humanoïde"
 		NON_COMBAT_PET = "Familier pacifique"
 		NOT_SPECIFIED = "Non spécifié"
-		YOU = "VOUS"
 		BOSS = "Chef"
 		ELITE = "Élite"
 		RARE = "Raro"
+		YOU = "VOUS"
+		OF = "de"
 	elseif GAME_LOCALE == "itIT" then
 		LEVEL = "[Ll]ivello"
 		BEAST = "Tipo Bestiale"
 		HUMANOID = "Tipo Umanoide"
 		NON_COMBAT_PET = "Animale Non combattente"
 		NOT_SPECIFICED = "Non Specificato"
-		YOU = "VOI"
 		BOSS = "Capo"
-		--ELITE = "Elite"
+		ELITE = "Elite"
 		RARE = "Raro"
+		YOU = "VOI"
+		OF = "di"
 	elseif GAME_LOCALE == "ptBR" then
 		LEVEL = "[Nn]ível"
 		BOSS = " %(Chefe%)"
@@ -80,20 +89,22 @@ do
 		HUMANOID = "Humanoide"
 		NON_COMBAT_PET = "Mascote não-combatente"
 		NOT_SPECIFIED = "Não especificado"
-		YOU = "VOCÊ"
 		BOSS = "Chefe"
-		--ELITE = "Elite"
+		ELITE = "Elite"
 		RARE = "Raro"
+		YOU = "VOCÊ"
+		OF = "de"
 	elseif GAME_LOCALE == "ruRU" then
 		LEVEL = "[Уу]рове?н[ья]"
 		BEAST = "Животное"
 		HUMANOID = "Гуманоид"
 		NON_COMBAT_PET = "Спутник"
 		NOT_SPECIFIED = "Не указано"
-		YOU = "ВАС"
 		BOSS = "Босс"
 		ELITE = "Элита"
 		RARE = "Редкий"
+		YOU = "ВАС"
+		OF = "из"
 	elseif GAME_LOCALE == "koKR" then
 		LEVEL = "레벨"
 		BEAST = "야수"
@@ -103,26 +114,30 @@ do
 		BOSS = "우두머리"
 		ELITE = "정예"
 		RARE = "희귀"
+		YOU = "당신"
+		OF = "에서" -- ???
 	elseif GAME_LOCALE == "zhCN" then
 		LEVEL = "等级"
 		BEAST = "野兽"
 		HUMANOID = "人型生物"
 		NON_COMBAT_PET = "非战斗宠物"
 		NOT_SPECIFIED = "未指定"
-		--YOU = "YOU"
 		BOSS = "首领"
 		ELITE = "精英"
 		RARE = "稀有"
+		YOU = "你"
+		OF = "的" -- ???
 	elseif GAME_LOCALE == "zhTW" then
 		LEVEL = "等級"
 		BEAST = "野獸"
 		HUMANOID = "人型生物"
 		NON_COMBAT_PET = "非戰鬥寵物"
 		NOT_SPECIFIED = "不明"
-		--YOU = "YOU"
 		BOSS = "首領"
 		ELITE = "精英"
 		RARE = "稀有"
+		YOU = "你"
+		OF = "的" -- ???
 	end
 end
 
@@ -404,9 +419,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		-- Name
 		if afk and realm then
-			left[line]:SetFormattedText("%s%s of %s%s|r %s<%s>|r", chex, name, realm, realmLabel, unithex.tapped, afk)
+			left[line]:SetFormattedText("%s%s %s %s%s|r %s<%s>|r", chex, name, OF, realm, realmLabel, unithex.tapped, afk)
 		elseif realm then
-			left[line]:SetFormattedText("%s%s of %s%s|r", chex, name, realm, realmLabel)
+			left[line]:SetFormattedText("%s%s %s %s%s|r", chex, name, OF, realm, realmLabel)
 		elseif afk then
 			left[line]:SetFormattedText("%s%s|r %s<%s>|r", chex, name, unithex.tapped, afk)
 		else
@@ -521,7 +536,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			if UnitIsUnit(target, "player") then
 				GameTooltip:AddLine(format("@ >> %s <<", YOU), 1, 1, 1)
 			elseif realm then
-				GameTooltip:AddLine(format("@ %s%s of %s|r", chex, name, realm), 1, 1, 1)
+				GameTooltip:AddLine(format("@ %s%s %s %s|r", chex, name, OF, realm), 1, 1, 1)
 			else
 				GameTooltip:AddLine(format("@ %s%s|r", chex, name), 1, 1, 1)
 			end
@@ -571,12 +586,17 @@ local function OnTooltipSetItem(self)
 	self.currentItem = link
 
 	local name, _, quality, _, _, type, subType, stackCount, _, icon, sellPrice = GetItemInfo(link)
+
+	if stackCount and stackCount > 1 and self.count then
+		self.count:SetText(stackCount)
+	end
+
 	local r, g, b
-	if type == "Quest" then
+	if type == QUEST then
 		r, g, b = 1, 0.82, 0.2
-	elseif subType == "Cooking" then
+	elseif subType == COOKING then
 		r, g, b = 0.4, 0.73, 1
-	elseif subType == "Companion Pets" then
+	elseif subType == COMPANION_PETS then
 		local _, id = C_PetJournal.FindPetIDByName(name)
 		if id then
 			local _, _, _, _, petQuality = C_PetJournal.GetPetStats(id)
@@ -588,11 +608,96 @@ local function OnTooltipSetItem(self)
 	if quality and not r then
 		r, g, b = GetItemQualityColor(quality)
 	end
-	if quality then
+	if r then
 		self:SetBackdropBorderColor(r, g, b)
+		if self.icon then
+			self.icon:SetBackdropBorderColor(r, g, b)
+		end
 	end
 end
 
-for _, tooltip in ipairs({ GameTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3 }) do
+for _, tooltip in ipairs({ GameTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3, ItemRefTooltip }) do
 	tooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
 end
+
+------------------------------------------------------------------------
+--	Items and achievements (ItemRefTooltip)
+
+do
+	local icon = CreateFrame("Frame", "$parentIcon", ItemRefTooltip)
+	icon:SetPoint("TOPRIGHT", ItemRefTooltip, "TOPLEFT", -8, 0)
+	icon:SetWidth(36)
+	icon:SetHeight(36)
+	ItemRefTooltip.icon = icon
+
+	if PhanxBorder then
+		PhanxBorder.AddBorder(icon)
+	end
+
+	local iconTex = icon:CreateTexture(nil, "BACKGROUND")
+	iconTex:SetAllPoints(true)
+	iconTex:SetTexCoord(0.06, 0.94, 0.06, 0.94)
+	icon.icon = iconTex
+
+	local check = icon:CreateTexture(nil, "ARTWORK")
+	check:SetPoint("BOTTOMRIGHT")
+	ItemRefTooltip.check = check
+
+	local count = icon:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
+	count:SetPoint("BOTTOMRIGHT")
+	ItemRefTooltip.count = count
+
+	function icon:SetTexture(texture)
+		if texture then
+			self:Show()
+			self.icon:SetTexture(texture)
+		else
+			self:Hide()
+			self.icon:SetTexture(nil)
+		end
+	end
+
+	icon:Hide()
+end
+
+ItemRefTooltip:HookScript("OnTooltipSetSpell", function(self)
+	local _, _, spell = self:GetSpell()
+	if not spell then return end
+	local _, _, icon = GetSpellInfo(spell)
+
+	self.icon:SetTexture(icon)
+end)
+
+hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(self, link)
+	if type(link) ~= "string" then return end
+	local linkType, id = strmatch(link, "^([^:]+):(%d+)")
+	if linkType == "achievement" then
+		local _, name, points, accountCompleted, month, day, year, description, flags, icon, rewardText, isGuild, characterCompleted, whoCompleted = GetAchievementInfo(id)
+
+		self.icon:SetTexture(icon)
+
+		self:SetBackdropBorderColor(1, 0.8, 0, 1)
+		self.icon:SetBackdropBorderColor(1, 0.8, 0, 1)
+
+		if characterCompleted then
+			self:AddLine(" ")
+			self:AddLine(format("Completed on %d-%d-%d", year, month, day))
+			self:Show()
+		elseif accountCompleted then
+			self:AddLine(" ")
+			self:AddLine(format("Completed by %s on %d-%d-%d", whoCompleted, year, month, day))
+			self:Show()
+		end
+--[[
+		if points > 0 then
+			self.count:SetText(points)
+		end
+]]
+	end
+end)
+
+ItemRefTooltip:HookScript("OnTooltipCleared", function(self)
+	self.icon:SetBackdropBorderColor(1, 1, 1)
+	self.icon:SetTexture(nil)
+	self.count:SetText(nil)
+end)
