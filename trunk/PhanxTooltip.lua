@@ -17,6 +17,9 @@ local HUMANOID = "Humanoid"
 local NON_COMBAT_PET = "Non-combat Pet"
 local NOT_SPECIFIED = "Not specified"
 local YOU = strupper(YOU)
+local BOSS = "Boss"
+local ELITE = "Elite"
+local RARE = "Rare"
 
 do
 	local GAME_LOCALE = GetLocale()
@@ -27,6 +30,9 @@ do
 		NON_COMBAT_PET = "Haustier"
 		NOT_SPECIFIED = "Nicht spezifiziert"
 		YOU = "DIR"
+		BOSS = "Chef"
+		--ELITE = "Elite"
+		RARE = "Rar"
 	elseif GAME_LOCALE == "esES" then
 		LEVEL = "Nivel"
 		BEAST = "Bestia"
@@ -34,6 +40,9 @@ do
 		NON_COMBAT_PET = "Mascota no combatiente"
 		NOT_SPECIFIED = "No especificado"
 		YOU = "TI"
+		BOSS = "Jefe"
+		ELITE = "Élite"
+		RARE = "Raro"
 	elseif GAME_LOCALE == "esMX" then
 		LEVEL = "Nivel"
 		BEAST = "Bestia"
@@ -41,6 +50,9 @@ do
 		NON_COMBAT_PET = "Mascota mansa"
 		NOT_SPECIFIED = "Sin especificar"
 		YOU = "TI"
+		BOSS = "Jefe"
+		ELITE = "Élite"
+		RARE = "Raro"
 	elseif GAME_LOCALE == "frFR" then
 		LEVEL = "[Nn]iveau"
 		BEAST = "Bête"
@@ -48,6 +60,9 @@ do
 		NON_COMBAT_PET = "Familier pacifique"
 		NOT_SPECIFIED = "Non spécifié"
 		YOU = "VOUS"
+		BOSS = "Chef"
+		ELITE = "Élite"
+		RARE = "Raro"
 	elseif GAME_LOCALE == "itIT" then
 		LEVEL = "[Ll]ivello"
 		BEAST = "Tipo Bestiale"
@@ -55,6 +70,9 @@ do
 		NON_COMBAT_PET = "Animale Non combattente"
 		NOT_SPECIFICED = "Non Specificato"
 		YOU = "VOI"
+		BOSS = "Capo"
+		--ELITE = "Elite"
+		RARE = "Raro"
 	elseif GAME_LOCALE == "ptBR" then
 		LEVEL = "[Nn]ível"
 		BOSS = " %(Chefe%)"
@@ -63,6 +81,9 @@ do
 		NON_COMBAT_PET = "Mascote não-combatente"
 		NOT_SPECIFIED = "Não especificado"
 		YOU = "VOCÊ"
+		BOSS = "Chefe"
+		--ELITE = "Elite"
+		RARE = "Raro"
 	elseif GAME_LOCALE == "ruRU" then
 		LEVEL = "[Уу]рове?н[ья]"
 		BEAST = "Животное"
@@ -70,30 +91,44 @@ do
 		NON_COMBAT_PET = "Спутник"
 		NOT_SPECIFIED = "Не указано"
 		YOU = "ВАС"
+		BOSS = "Босс"
+		ELITE = "Элита"
+		RARE = "Редкий"
 	elseif GAME_LOCALE == "koKR" then
 		LEVEL = "레벨"
 		BEAST = "야수"
 		HUMANOID = "인간형"
 		NON_COMBAT_PET = "애완동물"
 		NOT_SPECIFIED = "기타"
+		BOSS = "우두머리"
+		ELITE = "정예"
+		RARE = "희귀"
 	elseif GAME_LOCALE == "zhCN" then
 		LEVEL = "等级"
 		BEAST = "野兽"
 		HUMANOID = "人型生物"
 		NON_COMBAT_PET = "非战斗宠物"
 		NOT_SPECIFIED = "未指定"
+		--YOU = "YOU"
+		BOSS = "首领"
+		ELITE = "精英"
+		RARE = "稀有"
 	elseif GAME_LOCALE == "zhTW" then
 		LEVEL = "等級"
 		BEAST = "野獸"
 		HUMANOID = "人型生物"
 		NON_COMBAT_PET = "非戰鬥寵物"
 		NOT_SPECIFIED = "不明"
+		--YOU = "YOU"
+		BOSS = "首領"
+		ELITE = "精英"
+		RARE = "稀有"
 	end
 end
 
 local REALM_LABELS = {
-	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL,
-	[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL,
+	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL, -- (*)
+	--[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL, -- (#)
 }
 
 COALESCED_REALM_TOOLTIP = "" -- fuck off
@@ -147,10 +182,10 @@ local levelhex = setmetatable({ }, { __index = function(levelhex, level)
 end })
 
 local classification = {
-	elite = " |cffffcc00Elite|r",
-	rare  = " |cff999999Rare|r",
-	rareelite = " |cff999999Rare|r |cffffcc00Elite|r",
-	worldboss = " |cffff6666Boss|r",
+	elite = " |cffffcc00" .. ELITE .. "|r",
+	rare  = " |cff999999" .. RARE .. "r",
+	rareelite = " |cff999999" .. RARE .. "|r |cffffcc00" .. ELITE .. "|r",
+	worldboss = " |cffff6666" .. BOSS .. "|r",
 }
 
 local unitrgb = {
@@ -184,9 +219,9 @@ f:SetScript("OnEvent", function(f, event)
 		if CUSTOM_CLASS_COLORS then
 			CUSTOM_CLASS_COLORS:RegisterCallback(function()
 				for k, v in pairs(CUSTOM_CLASS_COLORS) do
-					classrgb[k].r = v.r
-					classrgb[k].g = v.g
-					classrgb[k].b = v.b
+					classrgb[k][1] = v.r
+					classrgb[k][2] = v.g
+					classrgb[k][3] = v.b
 					classhex[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
 				end
 			end)
@@ -220,7 +255,11 @@ do
 	bar:SetPoint("BOTTOMLEFT", 10, 10)
 	bar:SetPoint("BOTTOMRIGHT", -10, 10)
 	bar:SetHeight(6)
-	bar:SetStatusBarTexture([[Interface\AddOns\PhanxMedia\statusbar\BlizzStone2]])
+
+	local _, _, _, enabled, loadable = GetAddOnInfo("PhanxMedia")
+	if enabled == 1 and loadable == 1 then
+		bar:SetStatusBarTexture([[Interface\AddOns\PhanxMedia\statusbar\BlizzStone2]])
+	end
 
 	GameTooltip.statusBar = bar
 end
@@ -365,11 +404,11 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		-- Name
 		if afk and realm then
-			left[line]:SetFormattedText("%s%s of %s%s|r <%s>", chex, name, realm, afk, realmLabel)
+			left[line]:SetFormattedText("%s%s of %s%s|r %s<%s>|r", chex, name, realm, realmLabel, unithex.tapped, afk)
 		elseif realm then
 			left[line]:SetFormattedText("%s%s of %s%s|r", chex, name, realm, realmLabel)
 		elseif afk then
-			left[line]:SetFormattedText("%s%s|r <%s>", chex, name, afk)
+			left[line]:SetFormattedText("%s%s|r %s<%s>|r", chex, name, unithex.tapped, afk)
 		else
 			left[line]:SetFormattedText("%s%s|r", chex, name)
 		end
@@ -467,8 +506,6 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			L:SetText(nil)
 		end
 	end
-
-	GameTooltip:Show() -- Hopefully hide some nil'ed lines
 
 	--------------------------------------------------------------------
 	--	Add target info
