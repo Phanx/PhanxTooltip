@@ -5,146 +5,17 @@
 	See the accompanying LICENSE file for more information.
 ----------------------------------------------------------------------]]
 
-local BOSS = BOSS
-local CORPSE_TOOLTIP = "^" .. gsub(CORPSE_TOOLTIP, "%%s", "(.+)") .. "$"
-local PVP_ENABLED = PVP_ENABLED
-local SAME_FACTION = UnitFactionGroup("player")
-local WILDBATTLEPET_TOOLTIP = "^" .. gsub(TOOLTIP_WILDBATTLEPET_LEVEL_CLASS, "%%s", ".+")
-
-local LEVEL = "Level" -- Must match tooltip lines
-local QUEST = "Quest" -- Must match return from GetItemInfo
-local COOKING = "Cooking" -- Must match return from GetItemInfo
-local COMPANION_PETS = "Companion Pets" -- Must match return from GetItemInfo
-local BEAST = "Beast"
-local HUMANOID = "Humanoid"
-local NON_COMBAT_PET = "Non-combat Pet"
-local NOT_SPECIFIED = "Not specified"
-local BOSS = "Boss"
-local ELITE = "Elite"
-local RARE = "Rare"
-local YOU = "YOU"
-local OF = "of"
-
-do
-	local GAME_LOCALE = GetLocale()
-	if GAME_LOCALE == "deDE" then
-		LEVEL = "Stufe"
-		BEAST = "Wildtier"
-		HUMANOID = "Humanoid"
-		NON_COMBAT_PET = "Haustier"
-		NOT_SPECIFIED = "Nicht spezifiziert"
-		BOSS = "Chef"
-		ELITE = "Elite"
-		RARE = "Rar"
-		YOU = "EUCH"
-		OF = "von"
-	elseif GAME_LOCALE == "esES" then
-		LEVEL = "Nivel"
-		BEAST = "Bestia"
-		HUMANOID = "Humanoide"
-		NON_COMBAT_PET = "Mascota no combatiente"
-		NOT_SPECIFIED = "No especificado"
-		BOSS = "Jefe"
-		ELITE = "Élite"
-		RARE = "Raro"
-		YOU = "TI"
-		OF = "de"
-	elseif GAME_LOCALE == "esMX" then
-		LEVEL = "Nivel"
-		BEAST = "Bestia"
-		HUMANOID = "Humanoide"
-		NON_COMBAT_PET = "Mascota mansa"
-		NOT_SPECIFIED = "Sin especificar"
-		BOSS = "Jefe"
-		ELITE = "Élite"
-		RARE = "Raro"
-		YOU = "TI"
-		OF = "de"
-	elseif GAME_LOCALE == "frFR" then
-		LEVEL = "[Nn]iveau"
-		BEAST = "Bête"
-		HUMANOID = "Humanoïde"
-		NON_COMBAT_PET = "Familier pacifique"
-		NOT_SPECIFIED = "Non spécifié"
-		BOSS = "Chef"
-		ELITE = "Élite"
-		RARE = "Raro"
-		YOU = "VOUS"
-		OF = "de"
-	elseif GAME_LOCALE == "itIT" then
-		LEVEL = "[Ll]ivello"
-		BEAST = "Tipo Bestiale"
-		HUMANOID = "Tipo Umanoide"
-		NON_COMBAT_PET = "Animale Non combattente"
-		NOT_SPECIFICED = "Non Specificato"
-		BOSS = "Capo"
-		ELITE = "Elite"
-		RARE = "Raro"
-		YOU = "VOI"
-		OF = "di"
-	elseif GAME_LOCALE == "ptBR" then
-		LEVEL = "[Nn]ível"
-		BOSS = " %(Chefe%)"
-		BEAST = "Fera"
-		HUMANOID = "Humanoide"
-		NON_COMBAT_PET = "Mascote não-combatente"
-		NOT_SPECIFIED = "Não especificado"
-		BOSS = "Chefe"
-		ELITE = "Elite"
-		RARE = "Raro"
-		YOU = "VOCÊ"
-		OF = "de"
-	elseif GAME_LOCALE == "ruRU" then
-		LEVEL = "[Уу]рове?н[ья]"
-		BEAST = "Животное"
-		HUMANOID = "Гуманоид"
-		NON_COMBAT_PET = "Спутник"
-		NOT_SPECIFIED = "Не указано"
-		BOSS = "Босс"
-		ELITE = "Элита"
-		RARE = "Редкий"
-		YOU = "ВАС"
-		OF = "из"
-	elseif GAME_LOCALE == "koKR" then
-		LEVEL = "레벨"
-		BEAST = "야수"
-		HUMANOID = "인간형"
-		NON_COMBAT_PET = "애완동물"
-		NOT_SPECIFIED = "기타"
-		BOSS = "우두머리"
-		ELITE = "정예"
-		RARE = "희귀"
-		YOU = "당신"
-		OF = "에서" -- ???
-	elseif GAME_LOCALE == "zhCN" then
-		LEVEL = "等级"
-		BEAST = "野兽"
-		HUMANOID = "人型生物"
-		NON_COMBAT_PET = "非战斗宠物"
-		NOT_SPECIFIED = "未指定"
-		BOSS = "首领"
-		ELITE = "精英"
-		RARE = "稀有"
-		YOU = "你"
-		OF = "的" -- ???
-	elseif GAME_LOCALE == "zhTW" then
-		LEVEL = "等級"
-		BEAST = "野獸"
-		HUMANOID = "人型生物"
-		NON_COMBAT_PET = "非戰鬥寵物"
-		NOT_SPECIFIED = "不明"
-		BOSS = "首領"
-		ELITE = "精英"
-		RARE = "稀有"
-		YOU = "你"
-		OF = "的" -- ???
-	end
-end
+local _, L = ...
 
 local REALM_LABELS = {
 	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL, -- (*)
 	--[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL, -- (#)
 }
+
+local CORPSE_TOOLTIP = "^" .. gsub(CORPSE_TOOLTIP, "%%s", "(.+)") .. "$"
+local PVP_ENABLED = PVP_ENABLED
+local SAME_FACTION = UnitFactionGroup("player")
+local WILDBATTLEPET_TOOLTIP = "^" .. gsub(TOOLTIP_WILDBATTLEPET_LEVEL_CLASS, "%%s", ".+")
 
 COALESCED_REALM_TOOLTIP = "" -- fuck off
 
@@ -197,10 +68,10 @@ local levelhex = setmetatable({ }, { __index = function(levelhex, level)
 end })
 
 local classification = {
-	elite = " |cffffcc00" .. ELITE .. "|r",
-	rare  = " |cff999999" .. RARE .. "r",
-	rareelite = " |cff999999" .. RARE .. "|r |cffffcc00" .. ELITE .. "|r",
-	worldboss = " |cffff6666" .. BOSS .. "|r",
+	elite = " |cffffcc00" .. L["Elite"] .. "|r",
+	rare  = " |cff999999" .. L["Rare"] .. "r",
+	rareelite = " |cff999999" .. L["Rare"] .. "|r |cffffcc00" .. L["Elite"] .. "|r",
+	worldboss = " |cffff6666" .. L["Boss"] .. "|r",
 }
 
 local unitrgb = {
@@ -285,7 +156,6 @@ end
 do
 	local icon = GameTooltip:CreateTexture(nil, "OVERLAY")
 	icon:SetPoint("TOPRIGHT", GameTooltip, "TOPLEFT", -3, -3)
---	icon:SetPoint("CENTER", GameTooltip, "TOPRIGHT", -9, -9)
 	icon:SetWidth(36)
 	icon:SetHeight(36)
 	icon:SetTexture([[Interface\TargetingFrame\UI-RaidTargetingIcons]])
@@ -342,7 +212,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("CURSOR_UPDATE")
 f:SetScript("OnEvent", function()
-	if GameTooltip:IsShown() and GameTooltip:IsOwned(UIParent) and not GameTooltip.currentUnit then
+	if not GameTooltip.currentUnit and GameTooltip:IsShown() and GameTooltip:IsOwned(UIParent) then
 		local text = GameTooltipTextLeft1:GetText()
 		GameTooltip:Hide()
 		GameTooltipTextLeft1:SetText(text)
@@ -360,7 +230,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	if not playerGuild then playerGuild = GetGuildInfo("player") end
 	if not playerLevel then playerLevel = UnitLevel("player") end
 
-	if left[1]:GetText():match(CORPSE_TOOLTIP) then
+	if strmatch(left[1]:GetText(), CORPSE_TOOLTIP) then
 		local color = unitrgb.dead
 		return left[1]:SetTextColor(color[1], color[2], color[3])
 	end
@@ -398,7 +268,8 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		local afk = UnitIsAFK(unit) and "AFK" or UnitIsDND(unit) and "DND"
 
 		local class, classEN = UnitClass(unit)
-		local chex, cr, cg, cb = classhex[classEN], classrgb[classEN][1], classrgb[classEN][2], classrgb[classEN][3]
+		local chex, crgb = classhex[classEN], classrgb[classEN]
+		local cr, cg, cb = crgb[1], crgb[2], crgb[3]
 
 		local level, race, faction = UnitLevel(unit), UnitRace(unit), UnitFactionGroup(unit)
 		local lhex = UnitCanAttack("player", unit) and levelhex[level] or "|cffffffff"
@@ -409,7 +280,6 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		else
 			pvp = UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit)
 		end
-
 		if pvp then
 			local c = unitrgb[2]
 			GameTooltip:SetBackdropBorderColor(c[1], c[2], c[3])
@@ -419,9 +289,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		-- Name
 		if afk and realm then
-			left[line]:SetFormattedText("%s%s %s %s%s|r %s<%s>|r", chex, name, OF, realm, realmLabel, unithex.tapped, afk)
+			left[line]:SetFormattedText("%s%s %s %s%s|r %s<%s>|r", chex, name, L["of"], realm, realmLabel, unithex.tapped, afk)
 		elseif realm then
-			left[line]:SetFormattedText("%s%s %s %s%s|r", chex, name, OF, realm, realmLabel)
+			left[line]:SetFormattedText("%s%s %s %s%s|r", chex, name, L["of"], realm, realmLabel)
 		elseif afk then
 			left[line]:SetFormattedText("%s%s|r %s<%s>|r", chex, name, unithex.tapped, afk)
 		else
@@ -486,21 +356,21 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			-- Tooltip only has one line. Probably a world object. Skip everything else.
 			return GameTooltip:Show()
 		end
-		if not info:match(LEVEL) or (not info:match("%d") and not info:match("??")) then
+		if not info:match(L["Level"]) or (not info:match("%d") and not info:match("??")) then
 			-- Skip.
 			line = line + 1
 		end
 
 		-- Level, type
-		if not isBattlePet and ctype == NON_COMBAT_PET then
+		if not isBattlePet and ctype == L["Non-combat Pet"] then
 			left[line]:SetText(nil)
 		else
-			if info:match(BOSS) then
+			if info:match(L["Boss"]) then
 				class = "worldboss"
 			end
-			if ctype == NOT_SPECIFIED then
+			if ctype == L["Not specified"] then
 				ctype = ""
-			elseif ctype == NON_COMBAT_PET then
+			elseif ctype == L["Non-combat Pet"] then
 				ctype = TOOLTIP_BATTLE_PET
 			elseif UnitPlayerControlled(unit) then
 				ctype = UnitCreatureFamily(unit) or ctype
@@ -534,9 +404,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			local chex = classhex[classEN]
 
 			if UnitIsUnit(target, "player") then
-				GameTooltip:AddLine(format("@ >> %s <<", YOU), 1, 1, 1)
+				GameTooltip:AddLine(format("@ >> %s <<", L["YOU"]), 1, 1, 1)
 			elseif realm then
-				GameTooltip:AddLine(format("@ %s%s %s %s|r", chex, name, OF, realm), 1, 1, 1)
+				GameTooltip:AddLine(format("@ %s%s %s %s|r", chex, name, L["of"], realm), 1, 1, 1)
 			else
 				GameTooltip:AddLine(format("@ %s%s|r", chex, name), 1, 1, 1)
 			end
@@ -592,11 +462,11 @@ local function OnTooltipSetItem(self)
 	end
 
 	local r, g, b
-	if type == QUEST then
+	if type == L["Quest"] then
 		r, g, b = 1, 0.82, 0.2
-	elseif subType == COOKING then
+	elseif subType == L["Cooking"] then
 		r, g, b = 0.4, 0.73, 1
-	elseif subType == COMPANION_PETS then
+	elseif subType == L["Companion Pets"] then
 		local _, id = C_PetJournal.FindPetIDByName(name)
 		if id then
 			local _, _, _, _, petQuality = C_PetJournal.GetPetStats(id)
@@ -681,11 +551,11 @@ hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(self, link)
 
 		if characterCompleted then
 			self:AddLine(" ")
-			self:AddLine(format("Completed on %d-%d-%d", year, month, day))
+			self:AddLine(format(L["Completed on %1$d/%2$d/%3$d"], month, day, year))
 			self:Show()
 		elseif accountCompleted then
 			self:AddLine(" ")
-			self:AddLine(format("Completed by %s on %d-%d-%d", whoCompleted, year, month, day))
+			self:AddLine(format(L["Completed by %1$s on %2$d/%3$d/%4$d"], whoCompleted, month, day, year))
 			self:Show()
 		end
 --[[
