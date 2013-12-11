@@ -356,7 +356,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			-- Tooltip only has one line. Probably a world object. Skip everything else.
 			return GameTooltip:Show()
 		end
-		if not info:match(L["Level"]) or (not info:match("%d") and not info:match("??")) then
+		if not strmatch(info, L["Level"]) or (not strmatch(info, "%d") and not strmatch(info, "??")) then
 			-- Skip.
 			line = line + 1
 		end
@@ -365,7 +365,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		if not isBattlePet and ctype == L["Non-combat Pet"] then
 			left[line]:SetText(nil)
 		else
-			if info:match(L["Boss"]) then
+			if strmatch(info, L["Boss"]) then
 				class = "worldboss"
 			end
 			if ctype == L["Not specified"] then
@@ -542,25 +542,21 @@ hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(self, link)
 	if type(link) ~= "string" then return end
 	local linkType, id = strmatch(link, "^([^:]+):(%d+)")
 	if linkType == "achievement" then
-		local _, name, points, accountCompleted, month, day, year, description, flags, icon, rewardText, isGuild, characterCompleted, whoCompleted = GetAchievementInfo(id)
-
-		self.icon:SetTexture(icon)
-
+		local id, name, _, accountCompleted, month, day, year, _, _, icon, _, isGuild, characterCompleted, whoCompleted = GetAchievementInfo(id)
 		self:SetBackdropBorderColor(1, 0.8, 0, 1)
 		self.icon:SetBackdropBorderColor(1, 0.8, 0, 1)
-
-		if characterCompleted then
-			self:AddLine(" ")
-			self:AddLine(format(L["Completed on %1$d/%2$d/%3$d"], month, day, year))
-			self:Show()
-		elseif accountCompleted then
-			self:AddLine(" ")
-			self:AddLine(format(L["Completed by %1$s on %2$d/%3$d/%4$d"], whoCompleted, month, day, year))
-			self:Show()
-		end
+		self.icon:SetTexture(icon)
 --[[
-		if points > 0 then
-			self.count:SetText(points)
+		if characterCompleted then
+			print("characterCompleted")
+			self:AddLine(" ")
+			self:AddLine(format(L["Completed on %1$d/%2$d/20%3$d"], month, day, year))
+			self:Show()
+		elseif whoCompleted then
+			print("accountCompleted")
+			self:AddLine(" ")
+			self:AddLine(format(L["Completed by %1$s on %2$d/%3$d/20%4$d"], whoCompleted, month, day, year))
+			self:Show()
 		end
 ]]
 	end
