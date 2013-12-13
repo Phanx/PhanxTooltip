@@ -9,6 +9,9 @@
 ## X-License: See the accompanying LICENSE file for details.
 ## X-CompatibleLocales: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 ## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
+## X-Website: http://www.wowinterface.com/downloads/info22654-PhanxTooltip.html
+## X-Curse-Project-ID: phanxtooltip
+## X-WoWI-ID: 22654
 
 Localization.lua
 Core.lua
