@@ -8,11 +8,15 @@
 	http://www.curse.com/addons/wow/phanxtooltip
 ----------------------------------------------------------------------]]
 
+local STATUSBAR = oUFPhanxConfig and oUFPhanxConfig.statusbar or "Interface\\AddOns\\PhanxMedia\\statusbar\\Stone"
+
+------------------------------------------------------------------------
+
 local _, L = ...
 
 local REALM_LABELS = {
-	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL, -- (*)
-	--[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL, -- (#)
+	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL, -- (*) temporarily coaleasced (CRZ)
+	--[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL, -- (#) permanently connected
 }
 
 local CORPSE_TOOLTIP = "^" .. gsub(CORPSE_TOOLTIP, "%%s", "(.+)") .. "$"
@@ -45,10 +49,10 @@ TOOLTIP_DEFAULT_BACKGROUND_COLOR.b = 0
 do
 	local backdrop = GameTooltip:GetBackdrop()
 	if backdrop.insets.left == 5 then
-		backdrop.insets.left = 4
-		backdrop.insets.right = 4
-		backdrop.insets.top = 4
-		backdrop.insets.bottom = 4
+		backdrop.insets.left = 3
+		backdrop.insets.right = 3
+		backdrop.insets.top = 3
+		backdrop.insets.bottom = 3
 	end
 	for _, tooltip in pairs({ GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3, WorldMapTooltip, EventTraceTooltip, FrameStackTooltip }) do
 		tooltip:SetBackdrop(backdrop)
@@ -72,7 +76,7 @@ end })
 
 local classification = {
 	elite = " |cffffcc00" .. L["Elite"] .. "|r",
-	rare  = " |cff999999" .. L["Rare"] .. "r",
+	rare  = " |cff999999" .. L["Rare"] .. "|r",
 	rareelite = " |cff999999" .. L["Rare"] .. "|r |cffffcc00" .. L["Elite"] .. "|r",
 	worldboss = " |cffff6666" .. L["Boss"] .. "|r",
 }
@@ -145,9 +149,9 @@ do
 	bar:SetPoint("BOTTOMRIGHT", -10, 10)
 	bar:SetHeight(6)
 
-	local _, _, _, enabled, loadable = GetAddOnInfo("PhanxMedia")
-	if enabled == 1 and loadable == 1 then
-		bar:SetStatusBarTexture([[Interface\AddOns\PhanxMedia\statusbar\BlizzStone2]])
+	local addon = strmatch(STATUSBAR, "Interface\\AddOns\\(.-)\\")
+	if not addon or select(6, GetAddOnInfo(addon)) ~= "MISSING" then
+		bar:SetStatusBarTexture(STATUSBAR)
 	end
 
 	GameTooltip.statusBar = bar
