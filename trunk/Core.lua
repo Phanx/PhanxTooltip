@@ -1,14 +1,16 @@
 --[[--------------------------------------------------------------------
 	PhanxTooltip
 	Simple tooltip modifications.
-	Copyright (c) 2011-2013 Phanx <addons@phanx.net>. All rights reserved.
+	Copyright (c) 2011-2014 Phanx <addons@phanx.net>. All rights reserved.
 	See the accompanying LICENSE file for more information.
 	http://www.wowinterface.com/downloads/info22654-PhanxTooltip.html
 	http://wow.curseforge.com/addons/phanxtooltip/
 	http://www.curse.com/addons/wow/phanxtooltip
 ----------------------------------------------------------------------]]
 
-local STATUSBAR = oUFPhanxConfig and oUFPhanxConfig.statusbar or "Interface\\AddOns\\PhanxMedia\\statusbar\\Stone"
+local STATUSBAR = select(6,GetAddOnInfo("PhanxMedia")) == "INSECURE"
+	and "Interface\\AddOns\\PhanxMedia\\statusbar\\Qlight"
+	or "Interface\\TargetingFrame\\UI-StatusBar"
 
 ------------------------------------------------------------------------
 
@@ -267,10 +269,19 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 	if UnitIsPlayer(unit) then
 
-		local name, realm = UnitName(unit)
+		local name, realm, lang = UnitName(unit)
 		local realmLabel = REALM_LABELS[UnitRealmRelationship(unit)] or ""
 		if name == UNKNOWN then return end
-		if realm == "" or realm == playerRealm then realm = nil end
+		if realm == "" or realm == playerRealm then
+			realm = nil
+		elseif realm then
+			-- Split appended language name
+			realm, lang = strsplit("(", realm, 2)
+			-- Restore spaces
+			realm = gsub(realm, "(%l)(%u)", "%1 %2")
+			-- Remove extra parenthesis
+			lang = lang and strsub(lang, 1, -2)
+		end
 
 		local afk = UnitIsAFK(unit) and "AFK" or UnitIsDND(unit) and "DND"
 
@@ -363,7 +374,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			-- Tooltip only has one line. Probably a world object. Skip everything else.
 			return GameTooltip:Show()
 		end
-		if not strmatch(info, L["Level"]) or (not strmatch(info, "%d") and not strmatch(info, "??")) then
+		if not strfind(info, L["Level"]) and not strfind(info, L["Pet Level"]) then -- and not (strfind(info, "%d") or strfind(info, "%?%?")) then
 			-- Skip.
 			line = line + 1
 		end
@@ -372,12 +383,12 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		if not isBattlePet and ctype == L["Non-combat Pet"] then
 			left[line]:SetText(nil)
 		else
-			if strmatch(info, L["Boss"]) then
+			if strfind(info, L["Boss"]) then
 				class = "worldboss"
 			end
 			if ctype == L["Not specified"] then
 				ctype = ""
-			elseif ctype == L["Non-combat Pet"] then
+			elseif ctype == L["Non-combat Pet"] then -- TODO: "Ungezähmtes Tier" on wild battle pets
 				ctype = TOOLTIP_BATTLE_PET
 			elseif UnitPlayerControlled(unit) then
 				ctype = UnitCreatureFamily(unit) or ctype

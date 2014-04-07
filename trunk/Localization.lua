@@ -1,7 +1,7 @@
 --[[--------------------------------------------------------------------
 	PhanxTooltip
 	Simple tooltip modifications.
-	Copyright (c) 2011-2013 Phanx <addons@phanx.net>. All rights reserved.
+	Copyright (c) 2011-2014 Phanx <addons@phanx.net>. All rights reserved.
 	See the accompanying LICENSE file for more information.
 	http://www.wowinterface.com/downloads/info22654-PhanxTooltip.html
 	http://wow.curseforge.com/addons/phanxtooltip/
@@ -24,7 +24,8 @@ local GAME_LOCALE = GetLocale()
 
 if GAME_LOCALE == "deDE" then
 
-	L["Level"] = "Stufe" -- Must match tooltip lines
+	L["Level"] = "Stufe" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "Haustierstufe" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "Wildtier"
 	L["Humanoid"] = "Humanoid"
 	L["Non-combat Pet"] = "Haustier"
@@ -39,7 +40,8 @@ if GAME_LOCALE == "deDE" then
 
 elseif GAME_LOCALE == "esES" then
 
-	L["Level"] = "Nivel" -- Must match tooltip lines
+	L["Level"] = "Nivel" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "nivel" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "Bestia"
 	L["Humanoid"] = "Humanoide"
 	L["Non-combat Pet"] = "Mascota no combatiente"
@@ -54,7 +56,8 @@ elseif GAME_LOCALE == "esES" then
 
 elseif GAME_LOCALE == "esMX" then
 
-	L["Level"] = "Nivel" -- Must match tooltip lines
+	L["Level"] = "Nivel" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "nivel" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "Bestia"
 	L["Humanoid"] = "Humanoide"
 	L["Non-combat Pet"] = "Mascota mansa"
@@ -69,7 +72,8 @@ elseif GAME_LOCALE == "esMX" then
 
 elseif GAME_LOCALE == "frFR" then
 
-	L["Level"] = "[Nn]iveau" -- Must match tooltip lines
+	L["Level"] = "[Nn]iveau" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "niveau" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "Bête"
 	L["Humanoid"] = "Humanoïde"
 	L["Non-combat Pet"] = "Familier pacifique"
@@ -84,7 +88,8 @@ elseif GAME_LOCALE == "frFR" then
 
 elseif GAME_LOCALE == "itIT" then
 
-	L["Level"] = "[Ll]ivello" -- Must match tooltip lines
+	L["Level"] = "[Ll]ivello" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "livello" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "Tipo Bestiale"
 	L["Humanoid"] = "Tipo Umanoide"
 	L["Non-combat Pet"] = "Animale Non combattente"
@@ -99,7 +104,8 @@ elseif GAME_LOCALE == "itIT" then
 
 elseif GAME_LOCALE == "ptBR" then
 
-	L["Level"] = "[Nn]ível" -- Must match tooltip lines
+	L["Level"] = "[Nn]ível" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "Nível" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Boss"] = " %(Chefe%)"
 	L["Beast"] = "Fera"
 	L["Humanoid"] = "Humanoide"
@@ -115,7 +121,8 @@ elseif GAME_LOCALE == "ptBR" then
 
 elseif GAME_LOCALE == "ruRU" then
 
-	L["Level"] = "[Уу]рове?н[ья]" -- Must match tooltip lines
+	L["Level"] = "[Уу]рове?н[ья]" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "уровня" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "Животное"
 	L["Humanoid"] = "Гуманоид"
 	L["Non-combat Pet"] = "Спутник"
@@ -130,7 +137,8 @@ elseif GAME_LOCALE == "ruRU" then
 
 elseif GAME_LOCALE == "koKR" then
 
-	L["Level"] = "레벨" -- Must match tooltip lines
+	L["Level"] = "레벨" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "레벨" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "야수"
 	L["Humanoid"] = "인간형"
 	L["Non-combat Pet"] = "애완동물"
@@ -145,7 +153,8 @@ elseif GAME_LOCALE == "koKR" then
 
 elseif GAME_LOCALE == "zhCN" then
 
-	L["Level"] = "等级" -- Must match tooltip lines
+	L["Level"] = "等级" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "宠物等级" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "野兽"
 	L["Humanoid"] = "人型生物"
 	L["Non-combat Pet"] = "非战斗宠物"
@@ -160,7 +169,8 @@ elseif GAME_LOCALE == "zhCN" then
 
 elseif GAME_LOCALE == "zhTW" then
 
-	L["Level"] = "等級" -- Must match tooltip lines
+	L["Level"] = "等級" -- see TOOLTIP_UNIT_LEVEL
+	L["Pet Level"] = "寵物等級" -- see TOOLTIP_WILDBATTLEPET_LEVEL_CLASS
 	L["Beast"] = "野獸"
 	L["Humanoid"] = "人型生物"
 	L["Non-combat Pet"] = "非戰鬥寵物"
