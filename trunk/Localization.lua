@@ -30,6 +30,7 @@ if GAME_LOCALE == "deDE" then
 	L["Humanoid"] = "Humanoid"
 	L["Non-combat Pet"] = "Haustier"
 	L["Not specified"] = "Nicht spezifiziert"
+	L["Wild Pet"] = "Ungezähmtes Tier"
 	L["Boss"] = "Chef"
 	L["Elite"] = "Elite"
 	L["Rare"] = "Rar"
@@ -46,6 +47,7 @@ elseif GAME_LOCALE == "esES" then
 	L["Humanoid"] = "Humanoide"
 	L["Non-combat Pet"] = "Mascota no combatiente"
 	L["Not specified"] = "No especificado"
+	L["Wild Pet"] = "Mascota salvaje" -- needs check
 	L["Boss"] = "Jefe"
 	L["Elite"] = "Élite"
 	L["Rare"] = "Raro"
@@ -62,6 +64,7 @@ elseif GAME_LOCALE == "esMX" then
 	L["Humanoid"] = "Humanoide"
 	L["Non-combat Pet"] = "Mascota mansa"
 	L["Not specified"] = "Sin especificar"
+	L["Wild Pet"] = "Mascota salvaje" -- needs check
 	L["Boss"] = "Jefe"
 	L["Elite"] = "Élite"
 	L["Rare"] = "Raro"
@@ -78,6 +81,7 @@ elseif GAME_LOCALE == "frFR" then
 	L["Humanoid"] = "Humanoïde"
 	L["Non-combat Pet"] = "Familier pacifique"
 	L["Not specified"] = "Non spécifié"
+	L["Wild Pet"] = "Mascotte sauvage" -- needs check
 	L["Boss"] = "Chef"
 	L["Elite"] = "Élite"
 	L["Rare"] = "Raro"
@@ -94,6 +98,7 @@ elseif GAME_LOCALE == "itIT" then
 	L["Humanoid"] = "Tipo Umanoide"
 	L["Non-combat Pet"] = "Animale Non combattente"
 	L["Not specified"] = "Non Specificato"
+	L["Wild Pet"] = "Mascotte selvatica" -- needs check
 	L["Boss"] = "Capo"
 	L["Elite"] = "Elite"
 	L["Rare"] = "Raro"
@@ -111,6 +116,7 @@ elseif GAME_LOCALE == "ptBR" then
 	L["Humanoid"] = "Humanoide"
 	L["Non-combat Pet"] = "Mascote não-combatente"
 	L["Not specified"] = "Não especificado"
+	L["Wild Pet"] = "Mascote Selvagem" -- needs check
 	L["Boss"] = "Chefe"
 	L["Elite"] = "Elite"
 	L["Rare"] = "Raro"
@@ -127,6 +133,7 @@ elseif GAME_LOCALE == "ruRU" then
 	L["Humanoid"] = "Гуманоид"
 	L["Non-combat Pet"] = "Спутник"
 	L["Not specified"] = "Не указано"
+	L["Wild Pet"] = "Дикий питомец" -- needs check
 	L["Boss"] = "Босс"
 	L["Elite"] = "Элита"
 	L["Rare"] = "Редкий"
@@ -143,6 +150,7 @@ elseif GAME_LOCALE == "koKR" then
 	L["Humanoid"] = "인간형"
 	L["Non-combat Pet"] = "애완동물"
 	L["Not specified"] = "기타"
+	L["Wild Pet"] = "" -- TODO
 	L["Boss"] = "우두머리"
 	L["Elite"] = "정예"
 	L["Rare"] = "희귀"
@@ -159,6 +167,7 @@ elseif GAME_LOCALE == "zhCN" then
 	L["Humanoid"] = "人型生物"
 	L["Non-combat Pet"] = "非战斗宠物"
 	L["Not specified"] = "未指定"
+	L["Wild Pet"] = "" -- TODO
 	L["Boss"] = "首领"
 	L["Elite"] = "精英"
 	L["Rare"] = "稀有"
@@ -175,6 +184,7 @@ elseif GAME_LOCALE == "zhTW" then
 	L["Humanoid"] = "人型生物"
 	L["Non-combat Pet"] = "非戰鬥寵物"
 	L["Not specified"] = "不明"
+	L["Wild Pet"] = "" -- TODO
 	L["Boss"] = "首領"
 	L["Elite"] = "精英"
 	L["Rare"] = "稀有"

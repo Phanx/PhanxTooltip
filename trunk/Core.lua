@@ -8,8 +8,8 @@
 	http://www.curse.com/addons/wow/phanxtooltip
 ----------------------------------------------------------------------]]
 
-local STATUSBAR = select(6,GetAddOnInfo("PhanxMedia")) == "INSECURE"
-	and "Interface\\AddOns\\PhanxMedia\\statusbar\\Qlight"
+local STATUSBAR = select(6,GetAddOnInfo("PhanxMedia")) ~= "MISSING"
+	and "Interface\\AddOns\\PhanxMedia\\statusbar\\Neal"
 	or "Interface\\TargetingFrame\\UI-StatusBar"
 
 ------------------------------------------------------------------------
@@ -47,6 +47,8 @@ TOOLTIP_DEFAULT_COLOR.b = 0.8
 TOOLTIP_DEFAULT_BACKGROUND_COLOR.r = 0
 TOOLTIP_DEFAULT_BACKGROUND_COLOR.g = 0
 TOOLTIP_DEFAULT_BACKGROUND_COLOR.b = 0
+
+local DEFAULT_R, DEFAULT_G, DEFAULT_B = 204, 204, 204
 
 do
 	local backdrop = GameTooltip:GetBackdrop()
@@ -262,6 +264,13 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	end
 	GameTooltip.currentUnit = unit
 
+	local colorBorder
+	do
+		local er, eg, eb = GameTooltip:GetBackdropBorderColor()
+		--colorBorder = floor(er*255+0.5) == DEFAULT_R and floor(eg*255+0.5) == DEFAULT_G and floor(eb*255+0.5) == DEFAULT_B
+		colorBorder = ((er*255+1.5) - DEFAULT_R) < 2 and ((eg*255+1.5) - DEFAULT_G) < 2 and ((eb*255+1.5) - DEFAULT_B) < 2
+	end
+
 	--------------------------------------------------------------------
 	--	Reformat existing unit lines
 
@@ -298,11 +307,14 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		else
 			pvp = UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit)
 		end
-		if pvp then
-			local c = unitrgb[2]
-			GameTooltip:SetBackdropBorderColor(c[1], c[2], c[3])
-		else
-			GameTooltip:SetBackdropBorderColor(cr, cg, cb)
+	
+		if colorBorder then
+			if pvp then
+				local c = unitrgb[2]
+				GameTooltip:SetBackdropBorderColor(c[1], c[2], c[3])
+			else
+				GameTooltip:SetBackdropBorderColor(cr, cg, cb)
+			end
 		end
 
 		-- Name
@@ -362,7 +374,10 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			local c = unitrgb[v]
 			uhex, ur, ug, ub = unithex[v], c[1], c[2], c[3]
 		end
-		GameTooltip:SetBackdropBorderColor(ur, ug, ub)
+
+		if colorBorder then
+			GameTooltip:SetBackdropBorderColor(ur, ug, ub)
+		end
 
 		-- Name
 		left[line]:SetFormattedText("%s%s|r", uhex, name or UNKNOWN)
@@ -388,7 +403,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			end
 			if ctype == L["Not specified"] then
 				ctype = ""
-			elseif ctype == L["Non-combat Pet"] then -- TODO: "Ungezähmtes Tier" on wild battle pets
+			elseif ctype == L["Wild Pet"] or cypte == L["Non-combat Pet"] then
 				ctype = TOOLTIP_BATTLE_PET
 			elseif UnitPlayerControlled(unit) then
 				ctype = UnitCreatureFamily(unit) or ctype
