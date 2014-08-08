@@ -1,23 +1,26 @@
 --[[--------------------------------------------------------------------
 	PhanxTooltip
 	Simple tooltip modifications.
-	Copyright (c) 2011-2014 Phanx <addons@phanx.net>. All rights reserved.
+	Copyright (c) 2011-2014 Phanx. All rights reserved.
 	See the accompanying LICENSE file for more information.
 	http://www.wowinterface.com/downloads/info22654-PhanxTooltip.html
-	http://wow.curseforge.com/addons/phanxtooltip/
 	http://www.curse.com/addons/wow/phanxtooltip
+------------------------------------------------------------------------
+	TODO:
+	- Add standing with NPC factions, eg. "Orgrimmar - Exalted"
+	- Do something about green health bar
 ----------------------------------------------------------------------]]
 
 local STATUSBAR = select(6,GetAddOnInfo("PhanxMedia")) ~= "MISSING"
-	and "Interface\\AddOns\\PhanxMedia\\statusbar\\Neal"
-	or "Interface\\TargetingFrame\\UI-StatusBar"
+	and "Interface\\AddOns\\PhanxMedia\\statusbar\\HalA"
+	or "Interface\\TargetingFrame\\UI-StatusBar" -- change THIS LINE if you want a different texture
 
 ------------------------------------------------------------------------
 
 local _, L = ...
 
 local REALM_LABELS = {
-	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL, -- (*) temporarily coaleasced (CRZ)
+	[LE_REALM_RELATION_COALESCED] = FOREIGN_SERVER_LABEL, -- (*) temporarily connected (CRZ)
 	--[LE_REALM_RELATION_VIRTUAL] = INTERACTIVE_SERVER_LABEL, -- (#) permanently connected
 }
 
@@ -34,7 +37,8 @@ COALESCED_REALM_TOOLTIP = "" -- fuck off
 hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
 	self:SetOwner(parent, "ANCHOR_NONE")
 	self:ClearAllPoints()
-	self:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -30, 65)
+	--self:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -30, 65)
+	self:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -15, 0)
 end)
 
 ------------------------------------------------------------------------
@@ -68,9 +72,9 @@ end
 ------------------------------------------------------------------------
 --	Unit colors
 
-local classrgb, classhex = { }, { }
+local classrgb, classhex = {}, {}
 
-local levelhex = setmetatable({ }, { __index = function(levelhex, level)
+local levelhex = setmetatable({}, { __index = function(levelhex, level)
 	if type(level) ~= "number" then level = UnitLevel("player") end
 	local color = GetQuestDifficultyColor(level)
 	local hex = format("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
@@ -99,7 +103,7 @@ local unitrgb = {
 	 tapped = { 0.6, 0.6, 0.6 },
 }
 
-local unithex = { }
+local unithex = {}
 for k, v in pairs(unitrgb) do
 	unithex[k] = format("|cff%02x%02x%02x", v[1] * 255, v[2] * 255, v[3] * 255)
 end
@@ -131,13 +135,13 @@ end)
 ------------------------------------------------------------------------
 --	Faster access to fontstrings
 
-local left = setmetatable({ }, { __index = function(left, i)
+local left = setmetatable({}, { __index = function(left, i)
 	local line = _G["GameTooltipTextLeft" .. i]
 	if line then rawset(left, i, line) end
 	return line
 end })
 
-local right = setmetatable({ }, { __index = function(right, i)
+local right = setmetatable({}, { __index = function(right, i)
 	local line = _G["GameTooltipTextRight" .. i]
 	if line then rawset(right, i, line) end
 	return line
@@ -149,15 +153,10 @@ end })
 do
 	local bar = GameTooltipStatusBar
 	bar:ClearAllPoints()
-	bar:SetPoint("BOTTOMLEFT", 10, 10)
-	bar:SetPoint("BOTTOMRIGHT", -10, 10)
-	bar:SetHeight(6)
-
-	local addon = strmatch(STATUSBAR, "Interface\\AddOns\\(.-)\\")
-	if not addon or select(6, GetAddOnInfo(addon)) ~= "MISSING" then
-		bar:SetStatusBarTexture(STATUSBAR)
-	end
-
+	bar:SetPoint("BOTTOMLEFT", 5, 5) -- offsets were 10
+	bar:SetPoint("BOTTOMRIGHT", -5, 5)
+	bar:SetHeight(5) -- was 6
+	bar:SetStatusBarTexture(STATUSBAR)
 	GameTooltip.statusBar = bar
 end
 
@@ -268,7 +267,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	do
 		local er, eg, eb = GameTooltip:GetBackdropBorderColor()
 		--colorBorder = floor(er*255+0.5) == DEFAULT_R and floor(eg*255+0.5) == DEFAULT_G and floor(eb*255+0.5) == DEFAULT_B
-		colorBorder = ((er*255+1.5) - DEFAULT_R) < 2 and ((eg*255+1.5) - DEFAULT_G) < 2 and ((eb*255+1.5) - DEFAULT_B) < 2
+		--colorBorder = ((er*255+1.5) - DEFAULT_R) < 2 and ((eg*255+1.5) - DEFAULT_G) < 2 and ((eb*255+1.5) - DEFAULT_B) < 2
+		colorBorder = (er * 255 + 5 - DEFAULT_R) < 10 and (eg * 255 + 5 - DEFAULT_G) < 10 and (eb * 255 + 5 - DEFAULT_B) < 10
+		--print("Color border?", unit, er * 255, eg * 255, eb * 255, colorBorder)
 	end
 
 	--------------------------------------------------------------------
@@ -312,8 +313,10 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			if pvp then
 				local c = unitrgb[2]
 				GameTooltip:SetBackdropBorderColor(c[1], c[2], c[3])
+				--GameTooltip.statusBar:SetStatusBarColor(c[1], c[2], c[3])
 			else
 				GameTooltip:SetBackdropBorderColor(cr, cg, cb)
+				--GameTooltip.statusBar:SetStatusBarColor(cr, cg, cb)
 			end
 		end
 
@@ -338,9 +341,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		-- Level, class
 		if pvp then
-			left[line]:SetFormattedText("%s%d|r %s%s %s|r (%s)", lhex, level, chex, race, class, PVP_ENABLED)
+			left[line]:SetFormattedText("%s%d|r %s%s %s|r (%s)", lhex, level, "|cffeeeeee"--[[ chex]], race, class, PVP_ENABLED)
 		else
-			left[line]:SetFormattedText("%s%d|r %s%s %s|r", lhex, level, chex, race, class)
+			left[line]:SetFormattedText("%s%d|r %s%s %s|r", lhex, level, "|cffeeeeee"--[[ chex ]], race, class)
 		end
 		line = line + 1
 
@@ -377,6 +380,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 
 		if colorBorder then
 			GameTooltip:SetBackdropBorderColor(ur, ug, ub)
+			--GameTooltip.statusBar:SetStatusBarColor(ur, ug, ub)
 		end
 
 		-- Name
@@ -408,7 +412,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 			elseif UnitPlayerControlled(unit) then
 				ctype = UnitCreatureFamily(unit) or ctype
 			end
-			left[line]:SetFormattedText("%s%s|r%s %s%s|r%s", lhex, level > 0 and level or "??", classification[class] or "", uhex, ctype or "", btype or "")
+			left[line]:SetFormattedText("%s%s|r%s %s%s|r%s", lhex, level > 0 and level or "??", classification[class] or "", "|cffeeeeee"--[[ uhex ]], ctype or "", btype or "")
 			line = line + 1
 		end
 
@@ -474,7 +478,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	--	Done
 
 	if UnitHealth(unit) > 0 and not UnitIsDeadOrGhost(unit) then
-		GameTooltip.addHeight = 6 + GameTooltip.statusBar:GetHeight()
+		GameTooltip.addHeight = GameTooltip.statusBar:GetHeight() -- + 6
 	end
 
 	GameTooltip:Show()
