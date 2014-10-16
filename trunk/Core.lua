@@ -278,6 +278,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	local line = 1
 
 	if UnitIsPlayer(unit) then
+		-- TODO: check Sikari die Nebelwirkerin, proving grounds tank NPC
 
 		local name, realm, lang = UnitName(unit)
 		local realmLabel = REALM_LABELS[UnitRealmRelationship(unit)] or ""
@@ -308,7 +309,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		else
 			pvp = UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit)
 		end
-	
+
 		if colorBorder then
 			if pvp then
 				local c = unitrgb[2]
@@ -356,7 +357,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 		local tapped = UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)
 
 		local isBattlePet = UnitIsBattlePet(unit)
-		local level = isBattlePet and UnitBattlePetLevel(unit) or UnitLevel(unit)
+		local level = isBattlePet and UnitBattlePetLevel(unit) or UnitLevel(unit) if not level then print("NO LEVEL:", GameTooltipTextLeft1:GetText(), GameTooltip:GetUnit()) end
 		local class = UnitClassification(unit)
 		local ctype = UnitCreatureType(unit)
 		local btype = isBattlePet and format(" (%s)", _G["BATTLE_PET_NAME_"..UnitBattlePetType(unit)])
