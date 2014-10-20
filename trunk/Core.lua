@@ -263,14 +263,15 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(GameTooltip)
 	end
 	GameTooltip.currentUnit = unit
 
-	local colorBorder
+	local colorBorder = true
+	--[[ Removed in 6.x for now since the tooltip isn't reset when going from one unit to another
 	do
 		local er, eg, eb = GameTooltip:GetBackdropBorderColor()
 		--colorBorder = floor(er*255+0.5) == DEFAULT_R and floor(eg*255+0.5) == DEFAULT_G and floor(eb*255+0.5) == DEFAULT_B
 		--colorBorder = ((er*255+1.5) - DEFAULT_R) < 2 and ((eg*255+1.5) - DEFAULT_G) < 2 and ((eb*255+1.5) - DEFAULT_B) < 2
 		colorBorder = (er * 255 + 5 - DEFAULT_R) < 10 and (eg * 255 + 5 - DEFAULT_G) < 10 and (eb * 255 + 5 - DEFAULT_B) < 10
 		--print("Color border?", unit, er * 255, eg * 255, eb * 255, colorBorder)
-	end
+	end]]
 
 	--------------------------------------------------------------------
 	--	Reformat existing unit lines
