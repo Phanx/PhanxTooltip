@@ -6,11 +6,11 @@
 	http://www.curse.com/addons/wow/phanxtooltip
 
 	Please DO NOT upload this addon to other websites, or post modified
-	versions of it. However, you are welcome to use any/all of its code
-	in your own addon, as long as you do not use my name or the name of
-	this addon ANYWHERE in your addon, including in its name, outside of
-	an optional attribution. You are also welcome to include this addon
+	versions of it. However, you are welcome to include a copy of it
 	WITHOUT CHANGES in compilations posted on Curse and/or WoWInterface.
+	You are also welcome to use any/all of its code in your own addon, as
+	long as you do not use my name or the name of this addon ANYWHERE in
+	your addon, including its name, outside of an optional attribution.
 ------------------------------------------------------------------------
 	TODO:
 	- Add standing with NPC factions, eg. "Orgrimmar - Exalted"

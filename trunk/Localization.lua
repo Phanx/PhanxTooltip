@@ -7,11 +7,11 @@
 	http://www.curse.com/addons/wow/phanxtooltip
 
 	Please DO NOT upload this addon to other websites, or post modified
-	versions of it. However, you are welcome to use any/all of its code
-	in your own addon, as long as you do not use my name or the name of
-	this addon ANYWHERE in your addon, including in its name, outside of
-	an optional attribution. You are also welcome to include this addon
+	versions of it. However, you are welcome to include a copy of it
 	WITHOUT CHANGES in compilations posted on Curse and/or WoWInterface.
+	You are also welcome to use any/all of its code in your own addon, as
+	long as you do not use my name or the name of this addon ANYWHERE in
+	your addon, including its name, outside of an optional attribution.
 ----------------------------------------------------------------------]]
 
 local _, L = ...
@@ -156,7 +156,7 @@ elseif GAME_LOCALE == "koKR" then
 	L["Humanoid"] = "인간형"
 	L["Non-combat Pet"] = "애완동물"
 	L["Not specified"] = "기타"
-	L["Wild Pet"] = "" -- TODO
+--	L["Wild Pet"] = ""
 	L["Boss"] = "우두머리"
 	L["Elite"] = "정예"
 	L["Rare"] = "희귀"
@@ -173,7 +173,7 @@ elseif GAME_LOCALE == "zhCN" then
 	L["Humanoid"] = "人型生物"
 	L["Non-combat Pet"] = "非战斗宠物"
 	L["Not specified"] = "未指定"
-	L["Wild Pet"] = "" -- TODO
+--	L["Wild Pet"] = ""
 	L["Boss"] = "首领"
 	L["Elite"] = "精英"
 	L["Rare"] = "稀有"
@@ -190,7 +190,7 @@ elseif GAME_LOCALE == "zhTW" then
 	L["Humanoid"] = "人型生物"
 	L["Non-combat Pet"] = "非戰鬥寵物"
 	L["Not specified"] = "不明"
-	L["Wild Pet"] = "" -- TODO
+--	L["Wild Pet"] = ""
 	L["Boss"] = "首領"
 	L["Elite"] = "精英"
 	L["Rare"] = "稀有"
