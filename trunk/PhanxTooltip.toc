@@ -9,8 +9,8 @@
 
 ## Author: Phanx
 ## X-Email: addons@phanx.net
-## X-Copyright: Copyright (c) 2011-2014 Phanx. All rights reserved.
-## X-License: See the accompanying LICENSE file for details.
+## X-Copyright: Copyright (c) 2011-2014 Phanx.
+## X-License: All rights reserved.
 ## X-CompatibleLocales: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 ## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 ## X-Website: http://www.wowinterface.com/downloads/info22654-PhanxTooltip.html
